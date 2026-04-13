@@ -37,8 +37,7 @@ El feed está implementado con una **cola de prioridad (max-heap)** que prioriza
 
 ```
 tp2/
-├── main/
-│   └── algogram.go
+├── algogram.go
 ├── tdas/
 │   ├── app/
 │   ├── post/
