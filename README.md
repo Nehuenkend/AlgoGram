@@ -81,32 +81,27 @@ ana
 | `likear_post <id>` | Da like al post con el ID indicado |
 | `mostrar_likes <id>` | Muestra cuántos y quiénes likearon el post |
 
-### Ejemplo de entrada
+### Ejemplo de ejecución
 
 ```
-login juan
-publicar Hola mundo!
-logout
-login maria
-ver_siguiente_feed
-likear_post 0
-mostrar_likes 0
-logout
-```
-
-### Ejemplo de salida
-
-```
+> login juan
 Bienvenido juan
+> publicar Hola mundo!
 Post publicado
+> logout
 Adios
+> login maria
 Bienvenido maria
+> ver_siguiente_feed
 Post ID 0
 juan dijo: Hola mundo!
 Likes: 0
+> likear_post 0
 Post likeado
+> mostrar_likes 0
 El post tiene 1 likes:
 	maria
+> logout
 Adios
 ```
 
