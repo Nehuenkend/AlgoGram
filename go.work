@@ -2,5 +2,5 @@ go 1.25.0
 
 use (
 	./tdas
-	./tp2
+	./main
 )
