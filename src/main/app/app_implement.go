@@ -1,12 +1,12 @@
 package app
 
 import (
-	"bufio"
-	"fmt"
-	"os"
 	C "algogram/main/constantes"
 	TDAPost "algogram/main/post"
 	TDAUsuario "algogram/main/usuario"
+	"bufio"
+	"fmt"
+	"os"
 	TDADiccionario "tdas/diccionario"
 )
 
@@ -66,9 +66,6 @@ func (a *app) ObtenerUsuarioLogueado() TDAUsuario.Usuario {
 	return a.usuarioLogueado
 }
 
-// CargarUsuarios carga usuarios desde un archivo.
-// Retorna error en lugar de llamar os.Exit (mejora: más testeable y elegante).
-// Usa las constantes definidas para los mensajes de error.
 func (a *app) CargarUsuarios(archivo string) error {
 	archivoAbierto, err := os.Open(archivo)
 
@@ -160,8 +157,6 @@ func (a *app) LikearPost(id int) {
 	post := a.postsPublicados.Obtener(id)
 	nombreUsuario := a.usuarioLogueado.ObtenerNombre()
 
-	// Mejora: Usar el nuevo método UsuarioYaLikeo() en lugar de
-	// acceder al diccionario interno. Esto encapsula la lógica.
 	if !post.UsuarioYaLikeo(nombreUsuario) {
 		post.Likear(nombreUsuario)
 	}
