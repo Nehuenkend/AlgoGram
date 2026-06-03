@@ -1,4 +1,4 @@
-package src
+package constantes
 
 const (
 	COMANDO_LOGIN              = "login"

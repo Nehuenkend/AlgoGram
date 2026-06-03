@@ -1,10 +1,10 @@
-package src
+package comando
 
 import (
 	"fmt"
-	app "main/src/app"
-	constantes "main/src/constantes"
-	utils "main/src/utils"
+	app "algogram/main/app"
+	constantes "algogram/main/constantes"
+	utils "algogram/main/utils"
 )
 
 // ManejadorComandos encapsula la asociación entre comandos y su ejecución.
