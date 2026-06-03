@@ -3,10 +3,10 @@ package main
 import (
 	"bufio"
 	"fmt"
-	C "main/constantes"
 	TDAApp "main/src/app"
 	TDAComando "main/src/comando"
-	"main/src/utils"
+	C "main/src/constantes"
+	utils "main/src/utils"
 	"os"
 )
 

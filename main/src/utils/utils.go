@@ -1,9 +1,9 @@
-package utils
+package src
 
 import (
 	"errors"
 	"fmt"
-	C "main/constantes"
+	C "main/src/constantes"
 	"os"
 	"strconv"
 )

@@ -1,7 +1,7 @@
-package tdas
+package src
 
 import (
-	"main/src/utils"
+	utils "main/src/utils"
 	TDAHeap "tdas/cola_prioridad"
 	TDADict "tdas/diccionario"
 )

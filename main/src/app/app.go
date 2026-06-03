@@ -1,4 +1,4 @@
-package tdas
+package src
 
 import (
 	TDAUsuario "main/src/usuario"

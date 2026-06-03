@@ -1,4 +1,4 @@
-package tdas
+package src
 
 import (
 	TDADict "tdas/diccionario"

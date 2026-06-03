@@ -1,4 +1,4 @@
-package tdas
+package src
 
 type Comando interface {
 	// Tipo devuelve el nombre del comando.

@@ -1,9 +1,9 @@
-package tdas
+package src
 
 import (
 	"bufio"
 	"fmt"
-	C "main/constantes"
+	C "main/src/constantes"
 	TDAPost "main/src/post"
 	TDAUsuario "main/src/usuario"
 	"os"

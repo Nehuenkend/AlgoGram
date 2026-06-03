@@ -1,8 +1,8 @@
-package tdas
+package src
 
 import (
 	TDAPost "main/src/post"
-	"main/src/utils"
+	utils "main/src/utils"
 	TDAHeap "tdas/cola_prioridad"
 )
 
