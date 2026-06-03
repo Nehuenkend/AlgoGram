@@ -1,33 +1,34 @@
 package post
 
 import (
-	utils "algogram/main/utils"
-	TDAHeap "tdas/cola_prioridad"
 	TDADict "tdas/diccionario"
 )
 
-var _id int = -1
-
 type post struct {
-	id                int
-	contenido         string
-	likes             int
-	autor             string
-	id_autor          int
-	usuariosLikes     TDADict.Diccionario[string, bool]
-	heapUsuariosLikes TDAHeap.ColaPrioridad[string]
+	id               int
+	contenido        string
+	likes            int
+	autor            string
+	id_autor         int
+	usuariosLikes    TDADict.Diccionario[string, bool]
+	usuariosLikesArr []string // Mantener lista sincronizada para evitar side effects
 }
 
-func CrearPost(autor, contenido string, autor_id int) Post {
-	_id++
+// CrearPost crea un nuevo post con un ID generado por el generador inyectado
+// Parámetros:
+//   - generator: IDGenerator para obtener IDs únicos
+//   - autor: nombre del usuario que publica
+//   - contenido: texto del post
+//   - autor_id: identificador numérico del autor
+func CrearPost(generator IDGenerator, autor, contenido string, autor_id int) Post {
 	return &post{
-		id:                _id,
-		contenido:         contenido,
-		likes:             0,
-		autor:             autor,
-		id_autor:          autor_id,
-		usuariosLikes:     TDADict.CrearHash[string, bool](func(a, b string) bool { return a == b }),
-		heapUsuariosLikes: TDAHeap.CrearHeap(utils.StrCmp),
+		id:               generator.Next(),
+		contenido:        contenido,
+		likes:            0,
+		autor:            autor,
+		id_autor:         autor_id,
+		usuariosLikes:    TDADict.CrearHash[string, bool](func(a, b string) bool { return a == b }),
+		usuariosLikesArr: make([]string, 0),
 	}
 }
 
@@ -47,28 +48,26 @@ func (p *post) ObtenerContenido() string {
 	return p.contenido
 }
 
-func (p *post) ObtenerDictUsuariosLikes() TDADict.Diccionario[string, bool] {
-	return p.usuariosLikes
-}
-
+// ObtenerUsuariosLikes retorna una copia de la lista de usuarios que likearon.
 func (p *post) ObtenerUsuariosLikes() []string {
-	backup := make([]string, 0)
-
-	for !p.heapUsuariosLikes.EstaVacia() {
-		nombreActual := p.heapUsuariosLikes.Desencolar()
-		backup = append(backup, nombreActual)
-	}
-
-	p.heapUsuariosLikes = TDAHeap.CrearHeapArr(backup, utils.StrCmp)
-	return backup
+	copia := make([]string, len(p.usuariosLikesArr))
+	copy(copia, p.usuariosLikesArr)
+	return copia
 }
 
 func (p *post) CantidadLikes() int {
 	return p.likes
 }
 
+// UsuarioYaLikeo encapsula la lógica de búsqueda en el diccionario.
+func (p *post) UsuarioYaLikeo(nombreUsuario string) bool {
+	return p.usuariosLikes.Pertenece(nombreUsuario)
+}
+
 func (p *post) Likear(usuario string) {
-	p.likes++
-	p.usuariosLikes.Guardar(usuario, true)
-	p.heapUsuariosLikes.Encolar(usuario)
+	if !p.usuariosLikes.Pertenece(usuario) {
+		p.likes++
+		p.usuariosLikes.Guardar(usuario, true)
+		p.usuariosLikesArr = append(p.usuariosLikesArr, usuario)
+	}
 }

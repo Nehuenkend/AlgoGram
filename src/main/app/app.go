@@ -16,7 +16,8 @@ type App interface {
 	ObtenerUsuarioLogueado() TDAUsuario.Usuario
 
 	// CargarUsuarios carga los usuarios desde un archivo dado.
-	CargarUsuarios(archivo string)
+	// Retorna error si hay problemas al leer el archivo.
+	CargarUsuarios(archivo string) error
 
 	// ObtenerUsuariosRegistrados devuelve un diccionario con todos los usuarios registrados.
 	ObtenerUsuariosRegistrados() TDADiccionario.Diccionario[string, TDAUsuario.Usuario]

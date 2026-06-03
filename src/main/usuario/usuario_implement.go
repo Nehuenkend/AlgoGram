@@ -14,14 +14,17 @@ type usuario struct {
 
 func CrearUsuario(nombre string, id int) Usuario {
 	feed := TDAHeap.CrearHeap(func(p1, p2 TDAPost.Post) int {
-		// Heap de minimos por Afinidad
-		afinidad := utils.Modulo(p2.ObtenerIdAutor()-id) - utils.Modulo(p1.ObtenerIdAutor()-id)
+		// Heap de mínimos ordenado por afinidad (distancia del autor respecto al usuario actual)
+		// Luego por ID del post (para determinismo)
+		distancia1 := utils.Modulo(p1.ObtenerIdAutor() - id)
+		distancia2 := utils.Modulo(p2.ObtenerIdAutor() - id)
+		distanciaModulo := distancia2 - distancia1
 
-		if afinidad != 0 {
-			return afinidad
+		if distanciaModulo != 0 {
+			return distanciaModulo
 		}
 
-		// Si tienen la misma afinidad, es por Id
+		// Si tienen la misma distancia, ordenar por ID del post (descendente)
 		return p2.ObtenerID() - p1.ObtenerID()
 	})
 

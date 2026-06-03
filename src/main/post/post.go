@@ -1,9 +1,5 @@
 package post
 
-import (
-	TDADict "tdas/diccionario"
-)
-
 type Post interface {
 	// ObtenerID devuelve el identificador único del post.
 	ObtenerID() int
@@ -20,12 +16,15 @@ type Post interface {
 	// CantidadLikes devuelve la cantidad de likes que tiene el post.
 	CantidadLikes() int
 
-	// ObtenerDictUsuariosLikes devuelve un diccionario con los usuarios que han dado like al post.
-	ObtenerDictUsuariosLikes() TDADict.Diccionario[string, bool]
-
-	// ObtenerUsuariosLikes devuelve una lista con los nombres de los usuarios que han dado like al post.
+	// ObtenerUsuariosLikes devuelve una copia de la lista de usuarios que han dado like al post.
+	// Retorna una copia para evitar que el código cliente modifique la lista interna.
 	ObtenerUsuariosLikes() []string
 
 	// Likear permite a un usuario dar like al post.
+	// Si el usuario ya ha likeado, no hace nada (idempotente).
 	Likear(nombreUsuario string)
+
+	// UsuarioYaLikeo verifica si un usuario ya ha dado like a este post.
+	// Encapsula la lógica de búsqueda en el diccionario de likes.
+	UsuarioYaLikeo(nombreUsuario string) bool
 }

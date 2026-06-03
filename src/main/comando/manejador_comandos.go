@@ -1,10 +1,10 @@
 package comando
 
 import (
-	"fmt"
 	app "algogram/main/app"
 	constantes "algogram/main/constantes"
 	utils "algogram/main/utils"
+	"fmt"
 )
 
 // ManejadorComandos encapsula la asociación entre comandos y su ejecución.
@@ -36,22 +36,22 @@ func (m *ManejadorComandos) Ejecutar(cmd Comando) {
 	}
 }
 
-// likearPost parsea el ID y llama al método de la app.
-func (m *ManejadorComandos) likearPost(param string) {
-	id, err := utils.ObtenerIDPostDesdeComando(param, constantes.ERROR_LIKEAR_POST)
+// ejecutarConID es un helper genérico que parsea un ID y ejecuta una función.
+func (m *ManejadorComandos) ejecutarConID(param string, errorMsg string, fn func(int)) {
+	id, err := utils.ObtenerIDPostDesdeComando(param, errorMsg)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	m.app.LikearPost(id)
+	fn(id)
 }
 
-// mostrarLikes parsea el ID y llama al método de la app.
+// likearPost parsea el ID del post y delega a app.LikearPost.
+func (m *ManejadorComandos) likearPost(param string) {
+	m.ejecutarConID(param, constantes.ERROR_LIKEAR_POST, m.app.LikearPost)
+}
+
+// mostrarLikes parsea el ID del post y delega a app.MostrarLikes.
 func (m *ManejadorComandos) mostrarLikes(param string) {
-	id, err := utils.ObtenerIDPostDesdeComando(param, constantes.ERROR_MOSTRAR_LIKES)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	m.app.MostrarLikes(id)
+	m.ejecutarConID(param, constantes.ERROR_MOSTRAR_LIKES, m.app.MostrarLikes)
 }

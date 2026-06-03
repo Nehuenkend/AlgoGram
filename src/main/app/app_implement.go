@@ -14,9 +14,10 @@ type app struct {
 	usuarioLogueado     TDAUsuario.Usuario
 	usuariosRegistrados TDADiccionario.Diccionario[string, TDAUsuario.Usuario]
 	postsPublicados     TDADiccionario.Diccionario[int, TDAPost.Post]
+	idGenerator         TDAPost.IDGenerator
 }
 
-func CrearApp() App {
+func CrearApp(generator TDAPost.IDGenerator) App {
 	usuarios := TDADiccionario.CrearHash[string, TDAUsuario.Usuario](func(a, b string) bool { return a == b })
 	postsPublicados := TDADiccionario.CrearHash[int, TDAPost.Post](func(a, b int) bool { return a == b })
 
@@ -24,7 +25,17 @@ func CrearApp() App {
 		usuariosRegistrados: usuarios,
 		usuarioLogueado:     nil,
 		postsPublicados:     postsPublicados,
+		idGenerator:         generator,
 	}
+}
+
+// usuarioLogueadoONil valida que haya un usuario logueado.
+// Centraliza el null-check para reducir repetición (DRY).
+func (a *app) usuarioLogueadoONil() error {
+	if a.usuarioLogueado == nil {
+		return fmt.Errorf(C.ERROR_USUARIO_LOGOUT)
+	}
+	return nil
 }
 
 func (a *app) Login(nombreUsuario string) {
@@ -42,8 +53,8 @@ func (a *app) Login(nombreUsuario string) {
 }
 
 func (a *app) Logout() {
-	if a.usuarioLogueado == nil {
-		fmt.Println(C.ERROR_USUARIO_LOGOUT)
+	if err := a.usuarioLogueadoONil(); err != nil {
+		fmt.Println(err)
 		return
 	}
 
@@ -55,12 +66,14 @@ func (a *app) ObtenerUsuarioLogueado() TDAUsuario.Usuario {
 	return a.usuarioLogueado
 }
 
-func (a *app) CargarUsuarios(archivo string) {
+// CargarUsuarios carga usuarios desde un archivo.
+// Retorna error en lugar de llamar os.Exit (mejora: más testeable y elegante).
+// Usa las constantes definidas para los mensajes de error.
+func (a *app) CargarUsuarios(archivo string) error {
 	archivoAbierto, err := os.Open(archivo)
 
 	if err != nil {
-		fmt.Println(C.ERROR_ARCHIVO)
-		os.Exit(1)
+		return fmt.Errorf(C.ERROR_ARCHIVO)
 	}
 
 	defer archivoAbierto.Close()
@@ -69,10 +82,19 @@ func (a *app) CargarUsuarios(archivo string) {
 	id := 0
 	for scanner.Scan() {
 		nombre := scanner.Text()
+		if nombre == "" {
+			continue
+		}
 		nuevoUsuario := TDAUsuario.CrearUsuario(nombre, id)
 		a.usuariosRegistrados.Guardar(nombre, nuevoUsuario)
 		id++
 	}
+
+	if err := scanner.Err(); err != nil {
+		return fmt.Errorf(C.ERROR_ARCHIVO)
+	}
+
+	return nil
 }
 
 func (a *app) ObtenerUsuariosRegistrados() TDADiccionario.Diccionario[string, TDAUsuario.Usuario] {
@@ -80,14 +102,14 @@ func (a *app) ObtenerUsuariosRegistrados() TDADiccionario.Diccionario[string, TD
 }
 
 func (a *app) Publicar(contenido string) {
-	if a.usuarioLogueado == nil {
-		fmt.Println(C.ERROR_USUARIO_LOGOUT)
+	if err := a.usuarioLogueadoONil(); err != nil {
+		fmt.Println(err)
 		return
 	}
 
 	autor := a.usuarioLogueado.ObtenerNombre()
 	autor_id := a.usuarioLogueado.ObtenerId()
-	nuevoPost := TDAPost.CrearPost(autor, contenido, autor_id)
+	nuevoPost := TDAPost.CrearPost(a.idGenerator, autor, contenido, autor_id)
 	iteradorUsuarios := a.usuariosRegistrados.Iterador()
 
 	for iteradorUsuarios.HaySiguiente() {
@@ -106,8 +128,8 @@ func (a *app) Publicar(contenido string) {
 }
 
 func (a *app) VerSiguienteFeed() {
-	if a.usuarioLogueado == nil {
-		fmt.Println(C.ERROR_NO_HAY_POSTS)
+	if err := a.usuarioLogueadoONil(); err != nil {
+		fmt.Println(err)
 		return
 	}
 
@@ -125,8 +147,8 @@ func (a *app) VerSiguienteFeed() {
 }
 
 func (a *app) LikearPost(id int) {
-	if a.usuarioLogueado == nil {
-		fmt.Println(C.ERROR_LIKEAR_POST)
+	if err := a.usuarioLogueadoONil(); err != nil {
+		fmt.Println(err)
 		return
 	}
 
@@ -138,7 +160,9 @@ func (a *app) LikearPost(id int) {
 	post := a.postsPublicados.Obtener(id)
 	nombreUsuario := a.usuarioLogueado.ObtenerNombre()
 
-	if !post.ObtenerDictUsuariosLikes().Pertenece(nombreUsuario) {
+	// Mejora: Usar el nuevo método UsuarioYaLikeo() en lugar de
+	// acceder al diccionario interno. Esto encapsula la lógica.
+	if !post.UsuarioYaLikeo(nombreUsuario) {
 		post.Likear(nombreUsuario)
 	}
 
