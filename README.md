@@ -38,8 +38,8 @@ El feed está implementado con una **cola de prioridad (max-heap)** que prioriza
 ```
 main/
 ├── algogram.go
-├── main/
-│ 	├── src/
+├── src/
+│ 	├── main/
 │	│	├── constantes/
 │   │	├── app/	
 │   │	├── post/
