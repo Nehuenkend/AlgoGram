@@ -82,6 +82,7 @@ ana
 | `ver_siguiente_feed` | Muestra el siguiente post del feed |
 | `likear_post <id>` | Da like al post con el ID indicado |
 | `mostrar_likes <id>` | Muestra cuántos y quiénes likearon el post |
+| `exit` | Finaliza la ejecucion del programa |
 
 ### Ejemplo de ejecución
 
