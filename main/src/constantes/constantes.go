@@ -9,7 +9,7 @@ const (
 	COMANDO_MOSTRAR_LIKES      = "mostrar_likes"
 
 	COMANDO_NO_RECONOCIDO = "Comando no reconocido"
-	BIENVENIDA            = "Hola"
+	BIENVENIDA            = "Bienvenido"
 	DESPEDIDA             = "Adios"
 	POST_PUBLICADO        = "Post publicado"
 	POST_LIKEADO          = "Post likeado"
