@@ -36,28 +36,30 @@ El feed está implementado con una **cola de prioridad (max-heap)** que prioriza
 ### Estructura esperada del proyecto
 
 ```
-tp2/
+main/
 ├── algogram.go
-├── tdas/
-│   ├── app/
-│   ├── post/
-│   ├── usuario/
-│   ├── comando/
-│   ├── diccionario/
-│   └── cola_prioridad/
-├── constantes/
-└── utils/
+├── main/
+│ 	├── src/
+│	│	├── constantes/
+│   │	├── app/	
+│   │	├── post/
+│   │	├── usuario/
+│   │	├── comando/
+│	│	└── utils/
+│	└── pruebas/
+└── tdas/
+   ├── diccionario/
+   └── cola_prioridad/
+
 ```
 
 ### Ejecución
 
-El programa recibe por `stdin` el nombre del archivo de usuarios y luego lee comandos línea a línea:
+El programa recibe por `stdin` el nombre del archivo de usuarios (crear un .txt donde guardar el cache, por defectos esta usuarios.txt, al mismo se lo puede modificar para modificar los usuarios) y luego lee comandos línea a línea:
 
 ```bash
-go run algogram.go < entrada.txt
+go run algogram.go usuarios.txt
 ```
-
-O bien pasando el archivo de usuarios como primer argumento (según la implementación de `utils.ObtenerArchivoSTDIn()`).
 
 ### Formato del archivo de usuarios
 
