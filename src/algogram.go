@@ -36,6 +36,8 @@ func main() {
 
 	for scanner.Scan() {
 		cmd := comando.ExtraerComando(scanner.Text())
-		manejador.Ejecutar(cmd)
+		if !manejador.Ejecutar(cmd) {
+			break
+		}
 	}
 }

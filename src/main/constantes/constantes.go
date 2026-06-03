@@ -7,6 +7,7 @@ const (
 	COMANDO_VER_SIGUIENTE_FEED = "ver_siguiente_feed"
 	COMANDO_LIKEAR_POST        = "likear_post"
 	COMANDO_MOSTRAR_LIKES      = "mostrar_likes"
+	COMANDO_EXIT               = "exit"
 
 	COMANDO_NO_RECONOCIDO = "Comando no reconocido"
 	BIENVENIDA            = "Bienvenido"

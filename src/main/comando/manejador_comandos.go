@@ -28,12 +28,20 @@ func NuevoManejador(a app.App) *ManejadorComandos {
 }
 
 // Ejecutar invoca el comando correspondiente con su parámetro.
-func (m *ManejadorComandos) Ejecutar(cmd Comando) {
+// Retorna false si se debe terminar la aplicación, true en caso contrario.
+func (m *ManejadorComandos) Ejecutar(cmd Comando) bool {
 	if fn, ok := m.comandos[cmd.Tipo()]; ok {
 		fn(cmd.Parametro())
-	} else {
-		fmt.Println(constantes.COMANDO_NO_RECONOCIDO)
+		return true
 	}
+	
+	if cmd.Tipo() == constantes.COMANDO_EXIT {
+		fmt.Println(constantes.DESPEDIDA)
+		return false
+	}
+	
+	fmt.Println(constantes.COMANDO_NO_RECONOCIDO)
+	return true
 }
 
 // ejecutarConID es un helper genérico que parsea un ID y ejecuta una función.
